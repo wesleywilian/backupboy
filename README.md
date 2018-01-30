@@ -33,7 +33,7 @@ Below, the table describes Backupboy's current compatibility.
 
 #### 2.3 Language
 
-Abaixo, os idiomas suportados no momento.
+Below, the currently supported languages.
 
 |Software|Language|
 |-|-|
