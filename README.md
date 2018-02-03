@@ -37,11 +37,11 @@ Below, the currently supported languages.
 
 |Software|Language|
 |-|-|
-|Cobian Backup 11|Inglês|
+|Cobian Backup 11|English|
 |Cobian Backup 11|Portuguese Brazil|
-|Backup Exec|Inglês|
+|Backup Exec|English|
 |Backup Exec|Portuguese Brazil|
-|Robocopy|Inglês|
+|Robocopy|English|
 |Robocopy|Portuguese Brazil|
 
 #### 2.4 Available Outputs
