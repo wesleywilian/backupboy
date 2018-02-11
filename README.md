@@ -80,7 +80,7 @@ required arguments:
   --server SERVER      Imap server. "imap.mailserver.com"
   --user Username      Imap user
   --software Name      Software target {backupexec_en-us, backupexec_pt-br,
-                       cobian_en-us, cobian_pt-br, robocopy_en-us,
+                       cobian, robocopy_en-us,
                        robocopy_pt-br}
   --subject Subject    Mail subject text. "Some other subject"
 
@@ -107,7 +107,7 @@ optional arguments:
 Running example: Processing a backup log of Cobian software.
 
 ```sh
-wesley@pythost:~$ ./backupboy.py --server imap.server.com --user user.name --software cobian_en-us --subject Backup --port 993 --ssl --password mypassword
+wesley@pythost:~$ ./backupboy.py --server imap.server.com --user user.name --software cobian --subject Backup --port 993 --ssl --password mypassword
 Backup Pictures;2018-01-30 14:43;2018-01-30 14:43;0;5,57 MB
 Backup Pictures;2018-01-30 15:25;2018-01-30 15:25;0;5,57 MB
 ```

@@ -22,9 +22,9 @@ rargs.add_argument('--server', metavar='SERVER', type=str,
 rargs.add_argument('--user', metavar='Username', type=str,
                    help='Imap user', required=True)
 rargs.add_argument('--software', metavar='Name', type=str,
-                   help='Software target {backupexec_en-us, backupexec_pt-br, cobian_en-us, cobian_pt-br, robocopy_en-us, robocopy_pt-br}',
+                   help='Software target {backupexec_en-us, backupexec_pt-br, cobian, robocopy_en-us, robocopy_pt-br}',
                    required=True,
-                   choices=['backupexec_en-us', 'backupexec_pt-br', 'backupexec_pt', 'cobian_en-us', 'cobian_pt-br',
+                   choices=['backupexec_en-us', 'backupexec_pt-br', 'backupexec_pt', 'cobian',
                             'robocopy_en-us',
                             'robocopy_pt-br'])
 rargs.add_argument('--subject', metavar='Subject', type=str,
@@ -136,40 +136,22 @@ for id in data[1][0].split():
                         else:
                             print("Error: Wrong log content.")
                             sys.exit(1)
-                elif args.software.split('_')[0] == "cobian":
+                elif args.software == "cobian":
                     dir = os.path.dirname(filePath)
                     file = zipfile.ZipFile(filePath)
                     log = file.namelist()[0]
                     zipfile.ZipFile(filePath).extract(log, dir)
                     fileContent = Path(dir + os.sep + log).read_text("UTF-16 LE")
                     os.remove(dir + os.sep + log)
-                    if args.software.split('_')[1] == "en-us":
-                        job_name = re.findall('Backup done for the task \"(.*)\"', fileContent)
-                        job_start = re.findall('\n\s{4}([^\s]* [^\s]*) (\*\* Backing up the task|The task)',
-                                               fileContent)
-                        job_end = re.findall('\n\s{4}([^\s]* [^\s]*) [\*|]{2,3} Backup done', fileContent)
-                        job_status = re.findall('Errors: ([^.]*)', fileContent)
-                        job_size = re.findall('Total size: ([^\s]* [^\s]* )', fileContent)
-                    elif args.software.split('_')[1] == "pt-br":
-                        job_name = re.findall('Backup terminado para a tarefa \"(.*)\"', fileContent)
-                        job_start = re.findall('\n\s{4}([^\s]* [^\s]*) (\*\* Backupeando a tarefa|A tarefa)',
-                                               fileContent)
-                        job_end = re.findall('\n\s{4}([^\s]* [^\s]*) [\*|]{2,3} Backup terminado', fileContent)
-                        job_status = re.findall('Erros: ([^.]*)', fileContent)
-                        job_size = re.findall('Tamanho total: ([^\s]* [^\s]* )', fileContent)
-                    try:
+                    match = re.findall(
+                        '^\s{4}([^\s]* [^\s]*) \*{2} [^\"]*\"([^\"]*)\" \*{2}[^\*]*\*{2}[^\:]*\S\s([\d]*)\.[^\.]*\.[^\.]*\.[^\:]*\:\s([^\s]*\s[\w]*)[^\d]*([^\s]* [^\s]*) -{2}',
+                        fileContent, re.MULTILINE)
+                    for line in match:
                         if args.index:
-                            print("{};{};{};{};{};{}".format(args.index, job_name[0], job_start[0][0], job_end[0],
-                                                             job_status[0], job_size[0]))
+                            print(
+                                "{};{};{};{};{};{}".format(args.index, line[1], line[0], line[4], line[2], line[3]))
                         else:
-                            print("{};{};{};{};{}".format(job_name[0], job_start[0][0], job_end[0],
-                                                          job_status[0], job_size[0]))
-                    except IndexError:
-                        if args.force:
-                            pass
-                        else:
-                            print("Error: Wrong log content.")
-                            sys.exit(1)
+                            print("{};{};{};{};{}".format(line[1], line[0], line[4], line[2], line[3]))
                 elif args.software.split('_')[0] == "robocopy":
                     dir = os.path.dirname(filePath)
                     file = zipfile.ZipFile(filePath)
